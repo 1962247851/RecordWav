@@ -27,7 +27,7 @@ public class AudioRecordConfig {
      * - {@link AudioFormat#CHANNEL_IN_MONO} 单声道
      * - {@link AudioFormat#CHANNEL_IN_STEREO} 立体声，所有设备可用
      */
-    private int channelConfig = AudioFormat.CHANNEL_IN_MONO;
+    private int channelConfig = AudioFormat.CHANNEL_IN_STEREO;
 
     /**
      * 音频数据格式
@@ -37,6 +37,10 @@ public class AudioRecordConfig {
      */
     private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
 
+    /**
+     * 沉默阀值（低于该值的不记录）
+     */
+    private short silenceThreshold = 50;
 
     public AudioRecordConfig() {
     }
@@ -92,6 +96,14 @@ public class AudioRecordConfig {
         this.audioFormat = audioFormat;
     }
 
+    public short getSilenceThreshold() {
+        return this.silenceThreshold;
+    }
+
+    public void setSilenceThreshold(short silenceThreshold) {
+        this.silenceThreshold = silenceThreshold;
+    }
+
     @Override
     public String toString() {
         return "录音参数配置: \n{" +
@@ -99,6 +111,7 @@ public class AudioRecordConfig {
                 ", sampleRateInHz=" + sampleRateInHz +
                 ", channelConfig=" + channelConfig +
                 ", audioFormat=" + audioFormat +
+                ", silenceThreshold=" + silenceThreshold +
                 '}';
     }
 }

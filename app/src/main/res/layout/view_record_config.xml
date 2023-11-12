@@ -52,7 +52,7 @@
         android:id="@+id/rg_channel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:checkedButton="@id/rb_channel_mono"
+        android:checkedButton="@id/rb_channel_stereo"
         android:orientation="horizontal">
 
         <TextView
@@ -136,4 +136,23 @@
             android:text="麦克风" />
 
     </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="沉默阀值（低于该值的不记录）"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <SeekBar
+            android:id="@+id/sb_silence_threshold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="1000" />
+    </LinearLayout>
 </LinearLayout>

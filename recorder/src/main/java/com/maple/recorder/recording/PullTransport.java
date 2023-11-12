@@ -26,7 +26,7 @@ public interface PullTransport {
     /**
      * 开始推送数据和写入文件
      */
-    void startPoolingAndWriting(AudioRecord audioRecord, int pullSizeInBytes, OutputStream outputStream) throws IOException;
+    void startPoolingAndWriting(AudioRecord audioRecord, int pullSizeInBytes, OutputStream outputStream, short silenceThreshold) throws IOException;
 
     /**
      * 设置【沉默】监听器
@@ -94,7 +94,7 @@ public interface PullTransport {
         }
 
         @Override
-        public void startPoolingAndWriting(AudioRecord audioRecord, int pullSizeInBytes, OutputStream outputStream) throws IOException {
+        public void startPoolingAndWriting(AudioRecord audioRecord, int pullSizeInBytes, OutputStream outputStream, short silenceThreshold) throws IOException {
             AudioChunk audioChunk = new AudioChunk.Bytes(new byte[pullSizeInBytes]);
             while (pull) {
                 int count = audioRecord.read(audioChunk.toBytes(), 0, pullSizeInBytes);
@@ -154,13 +154,13 @@ public interface PullTransport {
         }
 
         @Override
-        public void startPoolingAndWriting(AudioRecord audioRecord, int pullSizeInBytes, OutputStream outputStream) throws IOException {
+        public void startPoolingAndWriting(AudioRecord audioRecord, int pullSizeInBytes, OutputStream outputStream, short silenceThreshold) throws IOException {
             AudioChunk.Shorts audioChunk = new AudioChunk.Shorts(new short[pullSizeInBytes]);
             while (pull) {
                 int count = audioRecord.read(audioChunk.toShorts(), 0, pullSizeInBytes);
                 if (AudioRecord.ERROR_INVALID_OPERATION != count && AudioRecord.ERROR_BAD_VALUE != count) {
                     postPullEvent(audioChunk);// 推送原始音频数据块
-                    if (audioChunk.isOverSilence()) {// 是否超过沉默阀值
+                    if (audioChunk.isOverSilence(silenceThreshold)) {// 是否超过沉默阀值
                         outputStream.write(audioChunk.toBytes());
                         writeCountAfterSilence++;
                         if (silenceTime > pushTimeThreshold) {

@@ -67,7 +67,6 @@ public interface AudioChunk {
      * short类型数据包装器
      */
     class Shorts extends AbstractAudioChunk {
-        private static final short SILENCE_THRESHOLD = 2700;// 沉默阀值（低于该值的不记录）
         private final short[] shorts;
 
         Shorts(short[] bytes) {
@@ -75,9 +74,10 @@ public interface AudioChunk {
         }
 
         // 是否超过沉默值
-        boolean isOverSilence() {
+        boolean isOverSilence(short silenceThreshold) {
             for (short sh : shorts) {
-                if (sh > SILENCE_THRESHOLD || sh < -SILENCE_THRESHOLD) {
+                // Log.d("isOverSilence", "sh=" + sh + ", silenceThreshold=" + silenceThreshold);
+                if (sh > silenceThreshold || sh < -silenceThreshold) {
                     return true;
                 }
             }

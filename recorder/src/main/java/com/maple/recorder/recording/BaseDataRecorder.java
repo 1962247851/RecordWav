@@ -65,7 +65,7 @@ public class BaseDataRecorder implements Recorder {
             }
             audioRecord.startRecording();
             pullTransport.isEnableToBePulled(true);
-            pullTransport.startPoolingAndWriting(audioRecord, bufferSizeInBytes, outputStream);
+            pullTransport.startPoolingAndWriting(audioRecord, bufferSizeInBytes, outputStream, config.getSilenceThreshold());
         } catch (IOException e) {
             e.printStackTrace();
         }

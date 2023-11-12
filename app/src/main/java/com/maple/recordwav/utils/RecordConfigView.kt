@@ -6,6 +6,7 @@ import android.media.MediaRecorder
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import android.widget.SeekBar
 import com.maple.recorder.recording.AudioRecordConfig
 import com.maple.recordwav.R
 import com.maple.recordwav.databinding.ViewRecordConfigBinding
@@ -29,7 +30,11 @@ class RecordConfigView : FrameLayout {
         init(context)
     }
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         init(context)
     }
 
@@ -76,6 +81,25 @@ class RecordConfigView : FrameLayout {
                 }
                 onConfigChangeListener?.onConfigChange(recordConfig)
             }
+            // 沉默阀值（低于该值的不记录）
+            sbSilenceThreshold.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    recordConfig.silenceThreshold = progress.toShort()
+                    onConfigChangeListener?.onConfigChange(recordConfig)
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    // ignore
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    // ignore
+                }
+            })
         }
     }
 
@@ -104,6 +128,7 @@ class RecordConfigView : FrameLayout {
             AudioFormat.ENCODING_PCM_FLOAT -> binding.rgAudioFormat.check(R.id.rb_float)
             else -> binding.rgAudioFormat.clearCheck()
         }
+        binding.sbSilenceThreshold.progress = recordConfig.silenceThreshold.toInt()
     }
 
     var onConfigChangeListener: OnRecordConfigChangeListener? = null
